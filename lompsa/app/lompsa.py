@@ -46,10 +46,10 @@ class MonthlyWidget(Gtk.Box):
 
     def get_month_json(self, month: int):
         url = "http://127.0.0.1:8000/month/" + str(month)
-        r = requests.get(url)
+        res = requests.get(url)
 
-        incomes_json = r.json()[0]
-        expenses_json = r.json()[0]
+        incomes_json = res.json()[0]
+        expenses_json = res.json()[1]
 
         print(incomes_json, expenses_json)
 
@@ -62,4 +62,9 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        r = requests.get("http://127.0.0.1:8000")
+        main()
+    except requests.exceptions.ConnectionError:
+        print("The backend isn't running...\n(Run backend: cd lompsa/backend && uvicorn backend:app --reload)")
+        exit(1)
